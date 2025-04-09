@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aquaventure - การชำระเงิน</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="payment.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chewy&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <header>
+      <div id="navbarContainer"></div>
+    </header>
+
+    <main class="container">
+      <h1 id="paymentTitle">การชำระเงิน</h1>
+
+      <form id="payment-method-form">
+        <label for="payment-method" id="paymentMethodLabel"
+          >เลือกวิธีการชำระเงิน:</label
+        >
+        <select id="payment-method" name="payment-method" required>
+          <option value="card" id="optionCard">บัตรเครดิต/เดบิต</option>
+          <option value="qr" id="optionQR">QR Code</option>
+        </select>
+        <button type="submit" id="nextBtn">ถัดไป</button>
+      </form>
+
+      <div id="card-payment-section" style="display: none">
+        <h2 id="cardTitle">การชำระเงินผ่านบัตรเครดิต</h2>
+        <form id="payment-form">
+          <div id="card-element"></div>
+          <button type="submit" id="submitCard">ชำระเงินผ่านบัตรเครดิต</button>
+        </form>
+      </div>
+
+      <div id="qr-payment-section" style="display: none">
+        <h2 id="qrTitle">การชำระเงินผ่าน QR Code</h2>
+        <p id="qrInstruction">สแกน QR Code ด้านล่างเพื่อทำการชำระเงิน</p>
+        <div id="qr-code"></div>
+      </div>
+      <div class="booking-summary card">
+        <h2>ข้อมูลการจอง</h2>
+        <p><strong>ชื่อ:</strong> <span id="summaryName">-</span></p>
+        <p><strong>อีเมล:</strong> <span id="summaryEmail">-</span></p>
+        <p><strong>กิจกรรม:</strong> <span id="summaryActivity">-</span></p>
+        <p><strong>จำนวนคน:</strong> <span id="summaryPeople">-</span></p>
+        <p><strong>วันที่:</strong> <span id="summaryDate">-</span></p>
+        <p><strong>เวลา:</strong> <span id="summaryTime">-</span></p>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-info">
+          <h3>Aquaventure</h3>
+          <p id="footerDesc">
+            สัมผัสประสบการณ์การผจญภัยสุดพิเศษกับกิจกรรมทางทะเลที่น่าตื่นเต้น
+          </p>
+          <p>&copy; 2025 Aquaventure</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="lang.js"></script>
+    <!-- ซ่อนไว้ตรงไหนก็ได้ใน body -->
+    <input type="hidden" id="bookingId" value="booking_id_จากระบบหรือURL" />
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get("bookingId");
+
+        if (!bookingId) {
+          Swal.fire({
+            icon: "error",
+            title: "ไม่พบข้อมูลการจอง",
+            text: "กรุณาทำการจองก่อนเข้าสู่หน้านี้",
+            confirmButtonText: "กลับหน้าแรก",
+            confirmButtonColor: "#F875AA",
+          }).then(() => {
+            window.location.href = "index.html";
+          });
+          return;
+        }
+
+        // ใส่ bookingId ลงใน input hidden เพื่อใช้งานต่อ
+        document.getElementById("bookingId").value = bookingId;
+
+        const token = localStorage.getItem("jwtToken");
+        if (!token) {
+          window.location.href = "auth.html";
+          return;
+        }
+
+        try {
+          const res = await fetch(
+            `http://localhost:5000/booking/${bookingId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const data = await res.json();
+
+          if (res.ok) {
+            const booking = data.booking;
+
+            document.getElementById("summaryName").textContent =
+              booking.fullname;
+            document.getElementById("summaryEmail").textContent = booking.email;
+            document.getElementById("summaryActivity").textContent =
+              booking.activity;
+            document.getElementById("summaryPeople").textContent =
+              booking.people;
+            document.getElementById("summaryDate").textContent = booking.date;
+            document.getElementById("summaryTime").textContent = booking.time;
+          } else {
+            throw new Error(data.message || "ไม่พบข้อมูลการจอง");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถโหลดข้อมูลการจองได้",
+            confirmButtonColor: "#F875AA",
+          });
+        }
+      });
+
+      const cardForm = document.getElementById("payment-form");
+      const qrSection = document.getElementById("qr-payment-section");
+
+      // กรณีกดชำระผ่านบัตร
+      cardForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const bookingId = document.getElementById("bookingId").value;
+
+        Swal.fire({
+          title: "กำลังดำเนินการชำระเงิน...",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          didOpen: () => Swal.showLoading(),
+        }).then(() => {
+          // ✅ เก็บข้อมูลการชำระเงิน
+          const paymentData = {
+            bookingId,
+            method: "card",
+            status: "success",
+            timestamp: new Date().toISOString(),
+          };
+          localStorage.setItem("paymentInfo", JSON.stringify(paymentData));
+
+          Swal.fire({
+            icon: "success",
+            title: "ชำระเงินสำเร็จ!",
+            confirmButtonColor: "#F875AA",
+          }).then(() => {
+            window.location.href = "thankyou.html";
+          });
+        });
+      });
+
+      // การเลือกวิธีการชำระเงิน
+      document
+        .getElementById("payment-method-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const method = document.getElementById("payment-method").value;
+
+          if (method === "card") {
+            document.getElementById("card-payment-section").style.display =
+              "block";
+            qrSection.style.display = "none";
+          } else if (method === "qr") {
+            qrSection.style.display = "block";
+            document.getElementById("card-payment-section").style.display =
+              "none";
+
+            document.getElementById("qr-code").innerHTML = `
+      <img src="https://api.qrserver.com/v1/create-qr-code/?data=AquaventurePaymentMock123&size=200x200" alt="QR Code" />
+    `;
+
+            const bookingId = document.getElementById("bookingId").value;
+
+            setTimeout(() => {
+              // ✅ เก็บข้อมูลการชำระเงิน
+              const paymentData = {
+                bookingId,
+                method: "qr",
+                status: "success",
+                timestamp: new Date().toISOString(),
+              };
+              localStorage.setItem("paymentInfo", JSON.stringify(paymentData));
+
+              Swal.fire({
+                icon: "success",
+                title: "ชำระเงินผ่าน QR สำเร็จ!",
+                confirmButtonColor: "#F875AA",
+              }).then(() => {
+                window.location.href = "thankyou.html";
+              });
+            }, 5000);
+          }
+        });
+    </script>
+    <script src="navbar.js"></script>
+  </body>
+</html>

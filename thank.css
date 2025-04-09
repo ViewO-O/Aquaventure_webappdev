@@ -1,0 +1,75 @@
+body {
+  font-family: 'Prompt', sans-serif;
+  background-color: #FFF6F6;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  animation: fadeIn 1s ease-in;
+}
+
+.container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.logo {
+  font-family: 'Chewy', cursive;
+  font-size: 2rem;
+  color: #ffffff;
+  
+}
+h1, h2 {
+  color: #F875AA;
+}
+
+.card {
+  background-color: #FFDFDF;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.button {
+  background-color: #AEDEFC;
+  color: #333;
+  text-decoration: none;
+  padding: 0.8rem 2rem;
+  font-weight: bold;
+  border-radius: 12px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+.button:hover {
+  background-color: #F875AA;
+  color: white;
+  transform: scale(1.05);
+}
+
+
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+}

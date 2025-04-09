@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>provider</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Chewy&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap");
+
+      .dashboard-container {
+        display: block;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        max-width: 1200px;
+      }
+
+      h1#providerDashboardTitle {
+        font-family: 'Chewy';
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        font-size: 2.5rem;
+        background-color: #f875aa;
+        border-radius: 50px;
+      }
+
+      label {
+        font-weight: 600;
+        color: #333;
+      }
+
+      select#activityFilter {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-left: 0.5rem;
+        font-family: 'Prompt', sans-serif;
+      }
+
+      #bookingList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: flex-start;
+        margin-top: 1.5rem;
+      }
+
+      /* การ์ด */
+      .booking-card {
+        background: #ffdfdf;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        width: 320px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .booking-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .booking-card p {
+        font-size: 1rem;
+        margin: 0.6rem 0;
+      }
+
+      .booking-card strong {
+        color: #444;
+      }
+
+      button.delete-btn {
+        background-color: #f875aa;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      }
+
+      button.delete-btn:hover {
+        background-color: #e05a94;
+      }
+
+      /* ส่วนสำหรับตำแหน่งปุ่มออกจากระบบ */
+      .logout-container {
+        width: 100%;
+        margin-top: 2rem;
+        text-align: center;
+      }
+
+      .logout-container button {
+        background-color: #f875aa;
+        color: white;
+        padding: 0.6rem 1.4rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .logout-container button:hover {
+        background-color: #e05a94;
+      }
+
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="navbarContainer"></div>
+    </header>
+
+    <main class="dashboard-container">
+      <h1 id="providerDashboardTitle">Aquaventure Reservations</h1>
+      <div style="margin-bottom: 1rem;">
+        <label for="activityFilter"><strong>กรองตามกิจกรรม:</strong></label>
+        <select id="activityFilter">
+          <option value="all">ทั้งหมด</option>
+          <option value="scuba">ดำน้ำ Scuba</option>
+          <option value="snorkeling">ดำน้ำตื้น</option>
+          <option value="boat">เช่าเรือส่วนตัว</option>
+          <option value="jetski">ขับเจ็ทสกี</option>
+        </select>
+      </div>
+      
+      <div id="bookingList"></div>
+
+      <div class="logout-container">
+        <button id="logoutBtn">ออกจากระบบ</button>
+      </div>
+    </main>
+
+    
+    <footer>
+      <div class="footer-container">
+        <h3>Aquaventure</h3>
+        <p id="footerDesc">สัมผัสประสบการณ์ผจญภัยทางทะเลที่น่าตื่นเต้น!</p>
+        <p>&copy; 2025 Aquaventure</p>
+      </div>
+    </footer>
+
+    <script src="lang.js"></script>
+    <script>
+      const token = localStorage.getItem("jwtToken");
+      const role = localStorage.getItem("role");
+    
+      if (!token || role !== "provider") {
+        window.location.href = "auth.html";
+      }
+    
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("jwtToken");
+        window.location.href = "auth.html";
+      });
+    
+      let allBookings = [];
+      let allPayments = [];
+    
+      async function loadData() {
+        try {
+          if (!token) {
+            throw new Error("Token ไม่พบ");
+          }
+    
+          const [bookingRes, paymentRes] = await Promise.all([ 
+            fetch("http://localhost:5000/allBookings", {
+              headers: { Authorization: `Bearer ${token}` },
+            }),
+            fetch("http://localhost:5000/provider/payments", {
+              headers: { Authorization: `Bearer ${token}` },
+            }),
+          ]);
+    
+          if (!bookingRes.ok || !paymentRes.ok) {
+            throw new Error("ไม่สามารถเชื่อมต่อกับ API");
+          }
+    
+          allBookings = await bookingRes.json();
+    
+          const paymentData = await paymentRes.json();
+          if (!Array.isArray(paymentData)) {
+            throw new Error("ข้อมูลการชำระเงินไม่ถูกต้อง");
+          }
+          allPayments = paymentData;
+    
+          renderBookings("all");
+        } catch (err) {
+          console.error(err);
+          alert("ไม่สามารถโหลดข้อมูลได้: " + err.message);
+        }
+      }
+    
+      function renderBookings(filterActivity) {
+        const container = document.getElementById("bookingList");
+        container.innerHTML = "";
+    
+        const filtered = allBookings.filter((booking) => {
+          return filterActivity === "all" || booking.activity === filterActivity;
+        });
+    
+        if (filtered.length === 0) {
+          container.innerHTML = "<p>ไม่มีรายการที่ตรงกับกิจกรรมที่เลือก</p>";
+          return;
+        }
+    
+        filtered.reverse().forEach((booking) => {
+          const isPaid = allPayments.some(
+            (p) => String(p.bookingId) === String(booking.id)
+          );
+    
+          const item = document.createElement("div");
+          item.classList.add("booking-card");
+          item.innerHTML = `
+            <p><strong>ชื่อผู้ใช้:</strong> ${booking.username}</p>
+            <p><strong>ชื่อจริง:</strong> ${booking.fullname}</p>
+            <p><strong>อีเมล:</strong> ${booking.email}</p>
+            <p><strong>กิจกรรม:</strong> ${translateActivityName(booking.activity)}</p>
+            <p><strong>วันที่:</strong> ${booking.date}</p>
+            <p><strong>เวลา:</strong> ${booking.time || "09:00"}</p>
+            <p><strong>จำนวน:</strong> ${booking.people}</p>
+            <p><strong>ราคารวม:</strong> ${booking.price} บาท</p>
+            <p><strong>สถานะการชำระเงิน:</strong>
+              <span style="color:${isPaid ? 'green' : 'red'};">
+                ${isPaid ? "ชำระแล้ว" : "ยังไม่ชำระ"}
+              </span>
+            </p>
+            <button class="delete-btn" data-id="${booking.id}">ลบ</button>
+          `;
+          container.appendChild(item);
+        });
+      }
+    
+      function translateActivityName(code) {
+        switch (code) {
+          case "scuba":
+            return "ดำน้ำ Scuba";
+          case "snorkeling":
+            return "ดำน้ำตื้น";
+          case "boat":
+            return "เช่าเรือส่วนตัว";
+          case "jetski":
+            return "ขับเจ็ทสกี";
+          default:
+            return code;
+        }
+      }
+    
+      document.getElementById("activityFilter").addEventListener("change", (e) => {
+        const selected = e.target.value;
+        renderBookings(selected);
+      });
+    
+      document.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("delete-btn")) {
+          const id = e.target.getAttribute("data-id");
+          if (confirm("คุณต้องการลบรายการจองนี้หรือไม่?")) {
+            try {
+              const res = await fetch(`http://localhost:5000/provider/booking/${id}`, {
+                method: "DELETE",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+                },
+              });
+    
+              const result = await res.json();
+              alert(result.message || "ลบรายการจองสำเร็จ");
+              location.reload();
+            } catch (err) {
+              console.error("เกิดข้อผิดพลาดในการลบ:", err);
+              alert("เกิดข้อผิดพลาดในการลบรายการจอง");
+            }
+          }
+        }
+      });
+    
+      window.addEventListener("DOMContentLoaded", loadData);
+    </script>
+    
+    <script src="navbar.js"></script>
+    
+  </body>
+</html>

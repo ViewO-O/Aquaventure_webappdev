@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Aquaventure - การจอง</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="booking.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+  <style>
+   
+  </style>
+</head>
+<body>
+  <header>
+    <div id="navbarContainer"></div>
+  </header>
+
+  <main>
+    <section>
+      <h2 id="bookingTitle">จองกิจกรรมกับเรา</h2>
+      <form id="bookingForm">
+        <div>
+          <label for="inputName" id="labelName">ชื่อ - นามสกุล</label>
+          <input type="text" id="inputName" placeholder="กรอกชื่อของคุณ" required />
+        </div>
+
+        <div>
+          <label for="inputEmail" id="labelEmail">อีเมล</label>
+          <input type="email" id="inputEmail" placeholder="your@email.com" required />
+        </div>
+
+        <div>
+          <p id="labelActivity">เลือกกิจกรรม</p>
+          <div class="activity-options">
+            <label class="activity-option">
+              <input type="radio" name="activity" value="scuba" required />
+              <span id="activityOptionScuba">คอร์สดำน้ำ Scuba</span>
+            </label>
+
+            <label class="activity-option">
+              <input type="radio" name="activity" value="snorkeling" required />
+              <span id="activityOptionSnorkeling">ดำน้ำตื้น</span>
+            </label>
+
+            <label class="activity-option">
+              <input type="radio" name="activity" value="boat" required />
+              <span id="activityOptionBoat">เช่าเรือส่วนตัว</span>
+            </label>
+
+            <label class="activity-option">
+              <input type="radio" name="activity" value="jetski" required />
+              <span id="activityOptionJetski">ขับเจ็ทสกี</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label for="inputPeople" id="labelPeople">จำนวนคน</label>
+          <input type="number" id="inputPeople" min="1" placeholder="ระบุจำนวนคน" required />
+        </div>
+
+        <div>
+          <label for="inputDate" id="labelDate">วันที่ต้องการจอง</label>
+          <input type="date" id="inputDate" required />
+        </div>
+        
+        <div>
+          <label for="inputTime" id="labelTime">เวลาที่ต้องการ</label>
+          <input type="time" id="inputTime" required />
+        </div>
+        
+
+        <div class="text-center">
+          <button type="submit" class="btn-submit" id="submitBtn" disabled>กำลังโหลด...</button>
+        </div>
+      </form>
+    </section>
+
+   <!-- 
+  bookingResult เคยใช้สำหรับแสดงผลการจองแบบ popup 
+  แต่ตอนนี้เปลี่ยนไปใช้ SweetAlert แทนแล้ว 
+-->
+<!-- <div id="bookingResult" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:999; background:#fff; padding:1.5rem; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.2); max-width:90%; width:400px;"></div> -->
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-info">
+        <h3 id="footerTitle">Aquaventure</h3>
+        <p id="footerDesc">สัมผัสประสบการณ์การผจญภัยสุดพิเศษกับกิจกรรมทางทะเลที่น่าตื่นเต้น</p>
+        <p id="footerCopyright">&copy; 2025 Aquaventure ทะเลผจญภัย</p>
+      </div>
+    </div>
+  </footer>
+  <script src="lang.js"></script>
+  <script src="booking.js"></script>
+  <script src="navbar.js"></script>
+
+</body>
+</html>

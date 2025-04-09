@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>customer</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Chewy&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap");
+
+      .dashboard-container {
+        display: block;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        max-width: 1200px;
+        min-height: 80vh;
+      }
+
+      .section {
+        margin-bottom: 2rem;
+      }
+
+      .section h3 {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-size: 1.8rem;
+        font-weight: 500;
+        background-color: #f875aa;
+        border-radius: 30px;
+      }
+
+      /* ส่วนแสดงรายการภายในแต่ละกลุ่ม */
+      #bookings-list,
+      #payments-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: flex-start;
+      }
+
+      /* การ์ดแต่ละใบ */
+      .booking-card,
+      .payment-card {
+        background: #ffdfdf;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        min-width: 260px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .booking-card:hover,
+      .payment-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .booking-card p,
+      .payment-card p {
+        margin-bottom: 0.8rem;
+        font-size: 1rem;
+        color: #333;
+      }
+
+      .booking-card strong,
+      .payment-card strong {
+        color: #555;
+        font-weight: bold;
+      }
+
+      /* ปุ่ม */
+      button.cancel-btn {
+        font-family: 'Prompt', sans-serif;
+        background-color: #f875aa;
+        color: white;
+        padding: 0.6rem 1.4rem;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+        margin-top: 0.5rem;
+      }
+
+      button.cancel-btn:hover {
+        background-color: #e05a94;
+      }
+
+      /* ส่วนสำหรับตำแหน่งปุ่มออกจากระบบ */
+      .logout-container {
+        width: 100%;
+        margin-top: 2rem;
+        text-align: center;
+      }
+
+      .logout-container button {
+        background-color: #f875aa;
+        color: white;
+        padding: 0.6rem 1.4rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .logout-container button:hover {
+        background-color: #e05a94;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-container {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        h2 {
+          font-size: 2rem;
+        }
+
+        h3 {
+          font-size: 1.6rem;
+        }
+
+        .booking-card,
+        .payment-card {
+          max-width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div id="navbarContainer"></div>
+    </header>
+
+    <main class="dashboard-container">
+      <section class="section" id="bookings-section">
+        <h3>การจองของฉัน</h3>
+        <div id="bookings-list"></div>
+      </section>
+
+      <section class="section" id="payments-section">
+        <h3>การชำระเงิน</h3>
+        <div id="payments-list"></div>
+        <div class="logout-container">
+          <button id="logoutBtn">ออกจากระบบ</button>
+        </div>
+      </section>
+
+
+    </main>
+    
+    <footer>
+      <div class="footer-container">
+        <h3>Aquaventure</h3>
+        <p id="footerDesc">สัมผัสประสบการณ์ผจญภัยทางทะเลที่น่าตื่นเต้น!</p>
+        <p>&copy; 2025 Aquaventure</p>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("role");
+        window.location.href = "auth.html";
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("jwtToken");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "customer") {
+          window.location.href = "auth.html";
+        }
+      });
+
+      const token = localStorage.getItem("jwtToken");
+
+      async function fetchBookings() {
+        const res = await fetch("http://localhost:5000/userBookings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const bookings = await res.json();
+        const container = document.getElementById("bookings-list");
+        container.innerHTML = "";
+
+        if (bookings.length === 0) {
+          container.innerHTML = "<p>ไม่มีรายการจอง</p>";
+          return;
+        }
+
+        bookings.forEach((booking) => {
+          const div = document.createElement("div");
+          div.className = "booking-card";
+          div.innerHTML = ` 
+          <p><strong>บริการ:</strong> ${translateActivity(booking.activity)}</p>
+          <p><strong>วันที่:</strong> ${booking.date}</p>
+          <p><strong>เวลา:</strong> ${booking.time || "09:00"}</p>
+          <p><strong>จำนวนคน:</strong> ${booking.people}</p>
+          <p><strong>ราคารวม:</strong> ${booking.price} บาท</p>
+          <button class="cancel-btn" onclick="cancelBooking(${
+            booking.id
+          })">ยกเลิกการจอง</button>
+        `;
+          container.appendChild(div);
+        });
+      }
+
+      async function cancelBooking(bookingId) {
+        if (!confirm("คุณต้องการยกเลิกรายการจองนี้หรือไม่?")) return;
+        const res = await fetch(`http://localhost:5000/booking/${bookingId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const result = await res.json();
+        alert(result.message);
+        fetchBookings();
+      }
+
+      function translateActivity(code) {
+        switch (code) {
+          case "scuba":
+            return "ดำน้ำ Scuba";
+          case "snorkeling":
+            return "ดำน้ำตื้น";
+          case "boat":
+            return "เช่าเรือ";
+          case "jetski":
+            return "ขับเจ็ทสกี";
+          default:
+            return code;
+        }
+      }
+
+      fetchBookings();
+      fetchPayments();
+
+      async function fetchPayments() {
+        const res = await fetch("http://localhost:5000/userBookings", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const bookings = await res.json();
+
+        const resPay = await fetch("http://localhost:5000/payments", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const payments = await resPay.json();
+
+        const container = document.getElementById("payments-list");
+        container.innerHTML = "";
+
+        if (bookings.length === 0) {
+          container.innerHTML = "<p>ไม่มีรายการจอง</p>";
+          return;
+        }
+
+        bookings.forEach((booking) => {
+          const alreadyPaid = payments.some((p) => p.bookingId === booking.id);
+
+          const div = document.createElement("div");
+          div.className = "payment-card";
+          div.innerHTML = ` 
+      <p><strong>บริการ:</strong> ${translateActivity(booking.activity)}</p>
+      <p><strong>วันที่:</strong> ${booking.date}</p>
+      <p><strong>จำนวนคน:</strong> ${booking.people}</p>
+      <p><strong>ยอดที่ต้องชำระ:</strong> ${booking.price} บาท</p>
+      ${
+        alreadyPaid
+          ? "<p style='color:green'><strong>สถานะ:</strong> ชำระแล้ว</p>"
+          : `<button class="cancel-btn" onclick="makePayment(${booking.id})">ชำระเงิน</button>`
+      }
+    `;
+          container.appendChild(div);
+        });
+      }
+
+      async function makePayment(bookingId) {
+        const confirmPay = confirm("คุณต้องการชำระเงินสำหรับรายการนี้หรือไม่?");
+        if (!confirmPay) return;
+
+        const res = await fetch("http://localhost:5000/payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            bookingId,
+            method: "โอนผ่านธนาคาร",
+            status: "paid",
+          }),
+        });
+
+        const result = await res.json();
+        alert(result.message);
+        fetchPayments(); // reload section
+      }
+    </script>
+    <script src="lang.js"></script>
+    <script src="navbar.js"></script>
+
+  </body>
+</html>

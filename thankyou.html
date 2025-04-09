@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ขอบคุณสำหรับการจอง</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="thank.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <header>
+    <div id="navbarContainer"></div>
+  </header>
+
+  <main class="container" style="text-align: center;">
+    <h1 id="thankYouTitle">ขอบคุณสำหรับการจองของคุณ!</h1>
+    <p id="thankYouMessage">การจองของคุณเสร็จสมบูรณ์แล้ว และได้รับการชำระเงินเรียบร้อย</p>
+
+    <div class="card" style="margin: 2rem auto; max-width: 500px;">
+      <h2 id="bookingDetailTitle">รายละเอียดการจอง</h2>
+      <p><strong id="labelService">บริการ:</strong> <span id="service-type">-</span></p>
+      <p><strong id="labelDate">วันที่:</strong> <span id="booking-date">-</span></p>
+      <p><strong id="labelTime">เวลา:</strong> <span id="booking-time">-</span></p>
+      <p><strong id="labelPeople">จำนวนคน:</strong> <span id="people-count">-</span></p>
+      <p><strong id="labelPrice">ราคารวม:</strong> <span id="total-price">-</span> <span id="currency">บาท</span></p>
+    </div>
+
+    <a href="index.html" class="button" style="padding: 0.7rem 2rem; background-color: #F875AA; color: white; border-radius: 8px;" id="backHomeBtn">กลับไปหน้าแรก</a>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-info">
+        <h3>Aquaventure</h3>
+        <p id="footerDesc">สัมผัสประสบการณ์การผจญภัยสุดพิเศษกับกิจกรรมทางทะเลที่น่าตื่นเต้น</p>
+        <p>&copy; 2025 Aquaventure</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lang.js"></script>
+  <script>
+    window.addEventListener("DOMContentLoaded", async () => {
+      const token = localStorage.getItem("jwtToken");
+
+      try {
+        const res = await fetch("http://localhost:5000/userBookings", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+
+        if (Array.isArray(data) && data.length > 0) {
+          const latest = data[data.length - 1];
+
+          document.getElementById("service-type").textContent = translateActivityName(latest.activity);
+          document.getElementById("booking-date").textContent = latest.date;
+          document.getElementById("booking-time").textContent = latest.time || "09:00";
+          document.getElementById("people-count").textContent = latest.people;
+          document.getElementById("total-price").textContent = latest.price || latest.people * 2000;
+        } else {
+          Swal.fire({
+            icon: "warning",
+            title: "ไม่พบข้อมูลการจอง",
+            text: "โปรดดำเนินการจองก่อนเข้าสู่หน้านี้",
+            confirmButtonText: "กลับไปหน้าแรก"
+          }).then(() => {
+            window.location.href = "index.html";
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: "ไม่สามารถโหลดข้อมูลการจองได้",
+          confirmButtonText: "ตกลง"
+        });
+      }
+    });
+
+    function translateActivityName(code) {
+      const currentLang = localStorage.getItem("language") || "th";
+      const names = {
+        scuba: { th: "ดำน้ำ Scuba", en: "Scuba Diving" },
+        snorkeling: { th: "ดำน้ำตื้น", en: "Snorkeling" },
+        boat: { th: "เช่าเรือส่วนตัว", en: "Boat Rental" },
+        jetski: { th: "ขับเจ็ทสกี", en: "Jet Ski" }
+      };
+      return names[code]?.[currentLang] || code;
+    }
+
+    setupLanguageSwitch(); 
+    setLanguage(localStorage.getItem("language") || "th"); 
+  </script>
+  <script src="navbar.js"></script>
+</body>
+</html>

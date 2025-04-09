@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aquaventure - กิจกรรม</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="act.css" />
+
+  </head>
+
+  <body>
+    <!-- เมนูนำทาง -->
+    <header>
+   
+        <div id="navbarContainer"></div>
+
+    </header>
+
+    <!-- กิจกรรมต่างๆ -->
+    <section >
+      <div class="activity-header">
+        <h2 id="activityHeader">กิจกรรมที่เรามีให้บริการ</h2>
+        <p id="activityDescription">
+          เลือกรูปแบบกิจกรรมที่คุณต้องการสัมผัส ประสบการณ์ที่น่าตื่นเต้นและไม่มีวันลืม
+        </p>
+      </div>
+
+      <div class="grid-container">
+        <!-- กิจกรรมดำน้ำ Scuba -->
+<div class="card">
+  <img
+    src="pic/sc4.jpg"
+    alt="Scuba Diving"
+    class="card-img"
+  />
+  <div class="card-content">
+    <h3 id="titleDive">คอร์สดำน้ำ Scuba</h3>
+    <p id="descDive">
+      เรียนรู้การดำน้ำกับทีมงานมืออาชีพที่มีประสบการณ์ พิชิตโลกใต้ทะเลกับกิจกรรมที่ปลอดภัยและสนุกสนาน
+    </p>
+    <p class="price">฿3,500 / <span id="perPerson">ท่าน</span></p>
+    <a href="scuba.html" class="btn-reserve" id="btnScuba">ดูรายละเอียด</a>
+  </div>
+</div>
+
+<!-- ดำน้ำตื้น -->
+<div class="card">
+  <img src="pic/sn4.jpg" alt="Snorkeling" class="card-img" />
+  <div class="card-content">
+    <h3 id="titleSnorkel">ดำน้ำตื้น</h3>
+    <p id="descSnorkel">
+      เพลิดเพลินกับโลกใต้น้ำตื้นๆ ที่เต็มไปด้วยปะการังและฝูงปลาสีสันสดใส เหมาะสำหรับผู้เริ่มต้นและครอบครัว
+    </p>
+    <p class="price">฿1,200 / <span id="perSession">ท่าน</span></p>
+    <a href="snorkeling.html" class="btn-reserve" id="btnSnorkel">ดูรายละเอียด</a>
+  </div>
+</div>
+
+<!-- ขับเจ็ทสกี -->
+<div class="card">
+  <img
+    src="pic/jt4.jpg"
+    alt="Jetski"
+    class="card-img"
+  />
+  <div class="card-content">
+    <h3 id="titleSki">ขับเจ็ทสกี</h3>
+    <p id="descSki">
+      สนุกกับการเล่นเจ็ทสกีบนทะเลพร้อมวิวทิวทัศน์ที่สวยงามสุดๆ นอกจากนี้ยังมีอุปกรณ์ที่ทันสมัยและปลอดภัย
+    </p>
+    <p class="price">฿2,000 / <span id="perHour">ชม.</span></p>
+    <a href="jetski.html" class="btn-reserve" id="btnSki">ดูรายละเอียด</a>
+  </div>
+</div>
+
+<!-- เช่าเรือ -->
+<div class="card">
+  <img
+    src="pic/b2.jpg"
+    alt="Boat Rental"
+    class="card-img"
+  />
+  <div class="card-content">
+    <h3 id="titleBoat">เช่าเรือส่วนตัว</h3>
+    <p id="descBoat">
+      เลือกเรือที่เหมาะกับการท่องเที่ยวของคุณ พร้อมกับเส้นทางชมทิวทัศน์หรือการดำน้ำตามจุดที่น่าสนใจ
+    </p>
+    <p class="price">฿5,000 / <span id="perDay">วัน</span></p>
+    <a href="boat.html" class="btn-reserve" id="btnBoat">ดูรายละเอียด</a>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-container">
+        <div class="footer-info">
+          <h3>Aquaventure</h3>
+          <p id="footerText">
+            สัมผัสประสบการณ์การผจญภัยสุดพิเศษกับกิจกรรมทางทะเลที่น่าตื่นเต้น
+          </p>
+          <p>&copy; 2025 Aquaventure ทะเลผจญภัย</p>
+        </div>
+      </div>
+    </footer>
+    <script src="lang.js"></script>
+    <script src="navbar.js"></script>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="authPageTitle">สมัครสมาชิก / ล็อกอิน</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="auth.css" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chewy&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      function toggleForm(formType) {
+        const registerSection = document.getElementById("registerFormSection");
+        const loginSection = document.getElementById("loginFormSection");
+        const toggleRegister = document.getElementById("toggleRegister");
+        const toggleLogin = document.getElementById("toggleLogin");
+
+        if (formType === "register") {
+          registerSection.style.display = "block";
+          loginSection.style.display = "none";
+          toggleRegister.classList.add("active");
+          toggleLogin.classList.remove("active");
+        } else {
+          registerSection.style.display = "none";
+          loginSection.style.display = "block";
+          toggleLogin.classList.add("active");
+          toggleRegister.classList.remove("active");
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div id="navbarContainer"></div>
+    </header>
+    
+
+    <nav>
+      <button id="toggleRegister" class="active" onclick="toggleForm('register')">
+        สมัครสมาชิก
+      </button>
+      <button id="toggleLogin" onclick="toggleForm('login')">ล็อกอิน</button>
+    </nav>
+
+    <!-- ฟอร์มสมัครสมาชิก -->
+    <section id="registerFormSection" style="display: block">
+      <h2 id="registerTitle">สมัครสมาชิก</h2>
+      <form id="registerForm">
+        <label for="reg-username" id="regUsernameLabel">ชื่อผู้ใช้:</label>
+        <input type="text" id="reg-username" name="username" required />
+
+        <label for="reg-password" id="regPasswordLabel">รหัสผ่าน:</label>
+        <input type="password" id="reg-password" name="password" required />
+
+        <label for="reg-confirm" id="regConfirmLabel">ยืนยันรหัสผ่าน:</label>
+        <input type="password" id="reg-confirm" name="confirmPassword" required />
+
+        <button type="submit" id="registerBtn">สมัครสมาชิก</button>
+      </form>
+    </section>
+
+    <!-- ฟอร์มล็อกอิน -->
+    <section id="loginFormSection" style="display: none">
+      <h2 id="loginTitle">ล็อกอิน</h2>
+      <form id="loginForm">
+        <label for="login-username" id="loginUsernameLabel">ชื่อผู้ใช้:</label>
+        <input type="text" id="login-username" name="username" required />
+
+        <label for="login-password" id="loginPasswordLabel">รหัสผ่าน:</label>
+        <input type="password" id="login-password" name="password" required />
+
+        <button type="submit" id="loginBtn">ล็อกอิน</button>
+      </form>
+    </section>
+
+    <footer>
+      <div class="footer-container">
+        <div class="footer-info">
+          <h3>Aquaventure</h3>
+          <p id="footerDesc">
+            สัมผัสประสบการณ์การผจญภัยสุดพิเศษกับกิจกรรมทางทะเลที่น่าตื่นเต้น
+          </p>
+          <p>&copy; 2025 Aquaventure</p>
+        </div>
+      </div>
+    </footer>
+    <script src="lang.js"></script>
+    <script src="auth.js"></script>
+    <script src="navbar.js"></script>
+  </body>
+</html>

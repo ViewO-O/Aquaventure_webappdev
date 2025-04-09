@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aquaventure</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        width: 90%;
+        max-width: 1200px;
+        justify-items: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1rem;
+      }
+
+      .detail-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .detail-img:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div id="navbarContainer"></div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section class="hero">
+        <h1 id="head">Aquaventure</h1>
+        <h2 id="heroTitle">ค้นพบความสนุกในทุกการผจญภัย!</h2>
+        <p id="heroDesc">
+          สร้างความสนุกทุกวันที่ Aquaventure — ดำน้ำ ล่องเรือ หรือขับ jetski
+          ด้วยรอยยิ้ม!
+        </p>
+        <a href="auth.html" class="btn-primary" id="heroBtn"
+          >เริ่มการผจญภัยของคุณ</a
+        >
+      </section>
+
+      <section class="services">
+        <h2 id="servicesTitle">บริการของเรา</h2>
+        <div class="image-gallery">
+          <img src="pic/sc5.jpg" alt="Snorkeling" class="detail-img" />
+          <img src="pic/sn1.jpg" alt="Snorkeling" class="detail-img" />
+          <img src="pic/b6.jpg" alt="Snorkeling" class="detail-img" />
+          <img src="pic/jt3.jpg" alt="Snorkeling" class="detail-img" />
+        </div>
+        <div class="service-container">
+          <div class="service-card">
+            <h3 id="divingTitle">ดำน้ำ</h3>
+            <p id="descDive">
+              เรียนรู้การดำน้ำกับทีมงานมืออาชีพที่มีประสบการณ์
+              พิชิตโลกใต้ทะเลกับกิจกรรมที่ปลอดภัยและสนุกสนาน
+            </p>
+            <a
+              href="scuba.html"
+              class="btn-primary serviceBtn"
+              id="divingDetailBtn"
+              >ดูรายละเอียด</a
+            >
+          </div>
+          <div class="service-card">
+            <h3 id="snorkelingTitle">ดำน้ำตื้น</h3>
+            <p id="descSnorkel">ผ่อนคลายไปกับการดำน้ำตื้นชมแนวปะการัง...</p>
+            <a
+              href="snorkeling.html"
+              class="btn-primary serviceBtn"
+              id="snorkelingDetailBtn"
+              >ดูรายละเอียด</a
+            >
+          </div>
+          <div class="service-card">
+            <h3 id="boatingTitle">ล่องเรือ</h3>
+            <p id="descBoat">
+              เลือกเรือที่เหมาะกับการท่องเที่ยวของคุณ
+              พร้อมกับเส้นทางชมทิวทัศน์หรือการดำน้ำตามจุดที่น่าสนใจ
+            </p>
+            <a
+              href="boat.html"
+              class="btn-primary serviceBtn"
+              id="boatingDetailBtn"
+              >ดูรายละเอียด</a
+            >
+          </div>
+          <div class="service-card">
+            <h3 id="jetskiTitle">เช่าเจ็ตสกี</h3>
+            <p id="descSki">สนุกกับการขี่เจ็ตสกีด้วยความเร็วสุดมันส์!</p>
+            <a
+              href="jetski.html"
+              class="btn-primary serviceBtn"
+              id="jetskiDetailBtn"
+              >ดูรายละเอียด</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-container">
+        <h3>Aquaventure</h3>
+        <p id="footerDesc">สัมผัสประสบการณ์ผจญภัยทางทะเลที่น่าตื่นเต้น!</p>
+        <p>&copy; 2025 Aquaventure</p>
+      </div>
+    </footer>
+    <script src="lang.js"></script>
+    <script src="navbar.js"></script>
+  </body>
+</html>

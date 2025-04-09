@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Noto Sans Thai', 'Prompt', sans-serif;
+  background-color: #FFF6F6;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Navigation toggle buttons */
+nav {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 1rem;
+  gap: 1rem;
+}
+
+nav button {
+  background-color: #AEDEFC;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+  font-family: 'Prompt', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav button.active,
+nav button:hover {
+  background-color: #FF4081;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Auth form container */
+section {
+  max-width: 420px;
+  margin: 0 auto 3rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+section h2 {
+  text-align: center;
+  color: #FF4081;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+}
+
+/* Form styling */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin-bottom: 0.3rem;
+  color: #555;
+  font-weight: 500;
+}
+
+form input {
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+  font-family: 'Prompt', sans-serif;
+  background-color: #FFF6F6;
+}
+
+form input:focus {
+  border-color: #AEDEFC;
+  outline: none;
+  box-shadow: 0 0 8px rgba(174, 222, 252, 0.3);
+}
+
+form input:hover {
+  border-color: #FF4081;
+  box-shadow: 0 0 8px rgba(251, 146, 158, 0.2);
+}
+
+form button {
+  background-color: #FF4081;
+  color: #fff;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: 'Prompt', sans-serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+  background-color: #AEDEFC;
+  color: #333;
+  transform: scale(1.03);
+}
+
+form button:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(251, 146, 158, 0.4);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  section {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  nav button {
+    width: 100%;
+    font-size: 1rem;
+  }
+}
