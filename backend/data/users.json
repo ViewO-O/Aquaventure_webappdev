@@ -1,0 +1,67 @@
+[
+  {
+    "username": "viewooo",
+    "password": "1234567",
+    "role": "customer"
+  },
+  {
+    "username": "testuser",
+    "password": "123456",
+    "role": "customer"
+  },
+  {
+    "username": "provider001",
+    "password": "provider001",
+    "role": "provider"
+  },
+  {
+    "username": "wanvilai",
+    "password": " view123",
+    "role": "customer"
+  },
+  {
+    "username": "test",
+    "password": "123456789",
+    "role": "customer"
+  },
+  {
+    "username": "testuser1",
+    "password": "120718",
+    "role": "customer"
+  },
+  {
+    "username": "test03",
+    "password": "12345678",
+    "role": "customer"
+  },
+  {
+    "username": "test05",
+    "password": "123456",
+    "role": "customer"
+  },
+  {
+    "username": "test06",
+    "password": "12345678",
+    "role": "customer"
+  },
+  {
+    "username": "test07",
+    "password": "1234567",
+    "role": "customer"
+  },
+  {
+    "username": "test08",
+    "password": "12345678",
+    "role": "customer"
+  },
+  {
+    "username": "test09",
+    "password": "12345678",
+    "role": "customer"
+  },
+  {
+    "username": "test10",
+    "password": "12345678",
+    "role": "customer"
+  }
+]
